@@ -1,0 +1,6 @@
+^data-raw$
+^README\.Rmd$
+^LICENSE\.md$
+^\.gitignore$
+^.*\.Rproj$
+^\.DS_Store$

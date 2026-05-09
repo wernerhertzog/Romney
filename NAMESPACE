@@ -1,0 +1,7 @@
+S3method(print,romney_consensus)
+export(agreement_covariance)
+export(agreement_formal)
+export(agreement_informal)
+export(answerkey_formal)
+export(consensus)
+export(simulate_consensus_data)

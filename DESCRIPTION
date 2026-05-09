@@ -1,0 +1,20 @@
+Package: Romney
+Type: Package
+Title: Cultural Consensus Analysis Utilities
+Version: 0.1.0
+Authors@R: person(given = "Werner", family = "Hertzog", role = c("aut", "cre"), email = "werner.hertzog@isek.uzh.ch")
+Description: Tools for cultural consensus analysis including formal,
+    informal, and covariance agreement models, minimum-residual factor-based
+    competence estimation, and formal answer-key estimation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    psych,
+    stats
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Author: Werner Hertzog [aut, cre]
+Maintainer: Werner Hertzog <werner.hertzog@isek.uzh.ch>
+URL: https://github.com/wernerhertzog/Romney
+BugReports: https://github.com/wernerhertzog/Romney/issues
