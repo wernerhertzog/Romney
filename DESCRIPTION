@@ -1,11 +1,12 @@
 Package: Romney
 Type: Package
-Title: Cultural Consensus Analysis Utilities
+Title: Classical Cultural Consensus Analysis with R
 Version: 0.1.0
 Authors@R: person(given = "Werner", family = "Hertzog", role = c("aut", "cre"), email = "werner.hertzog@isek.uzh.ch")
-Description: Tools for cultural consensus analysis including formal,
-    informal, and covariance agreement models, minimum-residual factor-based
-    competence estimation, and formal answer-key estimation.
+Description: Tools for classical cultural consensus analysis including
+    formal, informal, and covariance agreement models, UCINET-aligned
+    minimum-residual factor extraction, competence estimation, and
+    answer-key estimation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
