@@ -18,9 +18,9 @@ agreement alone, we can estimate:
 - the culturally most likely answer for each item
 
 This package reproduces the classical consensus results from
-[UCINET](https://www.analytictech.com/ucinet/) on the included comparison
+[UCINET](http://www.analytictech.com/ucinet/) on the included comparison
 datasets, including the UCINET-style consensus eigensystem used in its
-[Consensus Analysis help page](https://www.analytictech.com/ucinet/help/hs2900.htm).
+[Consensus Analysis help page](http://www.analytictech.com/ucinet/help/hs2900.htm).
 
 ## Installation
 

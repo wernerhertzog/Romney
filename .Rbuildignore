@@ -1,6 +1,7 @@
 ^data-raw$
 ^README\.Rmd$
 ^LICENSE\.md$
+^cran-comments\.md$
 ^\.gitignore$
 ^.*\.Rproj$
 ^\.DS_Store$

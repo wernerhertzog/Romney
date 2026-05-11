@@ -25,6 +25,10 @@ This is a new submission.
 `Romney` provides classical cultural consensus analysis in R, including formal,
 informal, and covariance models, with UCINET-aligned consensus extraction.
 
-At the time this file was prepared, the win-builder upload had completed
-successfully and the detailed Windows check results were still pending by
-email.
+The first win-builder run reported 1 NOTE in `checking CRAN incoming
+feasibility`: `New submission`, two proper names/acronyms in `DESCRIPTION`
+(`Batchelder`, `UCINET`), and an SSL-certificate issue on the external UCINET
+website linked from `README.md`. The README links were updated from `https` to
+`http` to avoid that external-site certificate problem, and the package was
+resubmitted to win-builder. The updated Windows check results were still
+pending by email when this file was prepared.
