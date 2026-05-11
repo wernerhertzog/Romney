@@ -6,7 +6,11 @@ Authors@R: person(given = "Werner", family = "Hertzog", role = c("aut", "cre"), 
 Description: Tools for classical cultural consensus analysis including
     formal, informal, and covariance agreement models, UCINET-aligned
     minimum-residual factor extraction, competence estimation, and
-    answer-key estimation.
+    answer-key estimation. Implements the classical framework of
+    Romney, Weller, and Batchelder (1986)
+    <doi:10.1525/aa.1986.88.2.02a00020>, Romney, Batchelder, and
+    Weller (1987) <doi:10.1177/000276487031002003>, and Weller (2007)
+    <doi:10.1177/1525822X07303502>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
