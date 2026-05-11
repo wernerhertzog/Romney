@@ -63,8 +63,8 @@ Examples:
 - respondents choose which of four plants is best for treating a symptom
 - respondents identify which kin term applies in a given vignette
 
-For two respondents \(i\) and \(j\), let \(p_{ij}\) be the proportion of
-items on which they gave the same answer, and let \(m\) be the number of
+For two respondents $i$ and $j$, let $p_{ij}$ be the proportion of
+items on which they gave the same answer, and let $m$ be the number of
 possible response options. The formal model uses a guessing-corrected
 agreement score:
 
@@ -103,8 +103,8 @@ $$
 a_{ij} = \mathrm{cor}(x_i, x_j)
 $$
 
-where \(x_i\) and \(x_j\) are the vectors of responses given by respondents
-\(i\) and \(j\).
+where $x_i$ and $x_j$ are the vectors of responses given by respondents
+$i$ and $j$.
 
 In plain language: if two people place items in a similar order, or give
 similarly high and low ratings across items, they are in stronger consensus.
@@ -129,8 +129,8 @@ Examples:
 - whether a plant is considered medicinal
 - whether a behavior is considered acceptable or unacceptable
 
-For each pair of respondents, the binary data can be summarized in a \(2 \times 2\)
-table with counts \(n_{11}\), \(n_{10}\), \(n_{01}\), and \(n_{00}\). The
+For each pair of respondents, the binary data can be summarized in a $2 \times 2$
+table with counts $n_{11}$, $n_{10}$, $n_{01}$, and $n_{00}$. The
 covariance model uses a covariance-style agreement score:
 
 $$
@@ -139,8 +139,8 @@ a_{ij} =
      {n (n - 1)\pi(1-\pi)}
 $$
 
-where \(n\) is the number of non-missing items used for that pair and
-\(\pi\) is the prior proportion of "yes" or "true" responses.
+where $n$ is the number of non-missing items used for that pair and
+$\pi$ is the prior proportion of "yes" or "true" responses.
 
 Why use this instead of the formal model for binary data? Because some binary
 domains are highly unbalanced. If most items are "no," then raw agreement can
