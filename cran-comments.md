@@ -2,11 +2,11 @@
 
 - Local macOS check: macOS Tahoe 26.4.1, R 4.5.2
 - `R CMD check --as-cran` on `Romney_0.1.0.tar.gz`
-- win-builder submission sent to `R-devel` on 2026-05-10; results are sent to the maintainer email by win-builder
+- win-builder `R-devel`: Windows Server 2022 x64, R Under development (2026-05-10 r90034 ucrt)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 3 notes
+0 errors | 0 warnings | 3 notes locally; 1 note on win-builder
 
 Notes:
 
@@ -25,10 +25,12 @@ This is a new submission.
 `Romney` provides classical cultural consensus analysis in R, including formal,
 informal, and covariance models, with UCINET-aligned consensus extraction.
 
-The first win-builder run reported 1 NOTE in `checking CRAN incoming
-feasibility`: `New submission`, two proper names/acronyms in `DESCRIPTION`
-(`Batchelder`, `UCINET`), and an SSL-certificate issue on the external UCINET
-website linked from `README.md`. The README links were updated from `https` to
-`http` to avoid that external-site certificate problem, and the package was
-resubmitted to win-builder. The updated Windows check results were still
-pending by email when this file was prepared.
+On win-builder, the final `R-devel` check completed with 1 NOTE in
+`checking CRAN incoming feasibility`:
+
+- `New submission`
+- possible misspellings in `DESCRIPTION`: `Batchelder`, `UCINET`
+
+These are expected and harmless. A previous external-URL SSL note from the
+UCINET website was resolved by changing the README links from `https` to
+`http` before the final win-builder run.
