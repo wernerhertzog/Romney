@@ -18,12 +18,17 @@ These notes are unrelated to package functionality.
 
 ## Resubmission
 
-This is a new submission.
+This is a resubmission. In response to CRAN feedback, the package title and
+description were revised to:
+
+- remove the redundant phrase `in R` from the title
+- remove the opening phrase `Tools for` from the description
+- format the software name `'UCINET'` in single quotes
 
 ## Comments
 
-`Romney` provides classical cultural consensus analysis in R, including formal,
-informal, and covariance models, with UCINET-aligned consensus extraction.
+`Romney` provides classical cultural consensus analysis, including formal,
+informal, and covariance models, with 'UCINET'-aligned consensus extraction.
 
 On win-builder, the final `R-devel` check completed with 1 NOTE in
 `checking CRAN incoming feasibility`:
