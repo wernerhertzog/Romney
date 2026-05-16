@@ -18,9 +18,12 @@ agreement alone, we can estimate:
 - the culturally most likely answer for each item
 
 This package reproduces the classical consensus results from
-[UCINET](http://www.analytictech.com/ucinet/) on the included comparison
-datasets, including the UCINET-style consensus eigensystem used in its
+['UCINET'](http://www.analytictech.com/ucinet/) on the included comparison
+datasets, including the 'UCINET'-style consensus eigensystem used in its
 [Consensus Analysis help page](http://www.analytictech.com/ucinet/help/hs2900.htm).
+For the classical consensus procedures covered here, this also aligns with
+['ANTHROPAC'](https://www.analytictech.com/anthropac/anthropac.htm), which
+reports the same results as 'UCINET' for these analyses.
 
 ## Installation
 
@@ -167,17 +170,20 @@ classical starting point.
 ## UCINET Reproduction
 
 `Romney` is built to reproduce the classical consensus results reported by
-UCINET as closely as possible. In this repository, the package includes:
+'UCINET' as closely as possible. In this repository, the package includes:
 
 - synthetic multiple-choice, binary, and ordinal datasets in CSV format
-- the latest UCINET result logs used for comparison
+- the latest 'UCINET' result logs used for comparison
 - helper scripts used to regenerate the comparisons
 
-The current implementation uses UCINET-aligned minimum-residual factor
+The current implementation uses 'UCINET'-aligned minimum-residual factor
 extraction for the consensus eigensystem, which is why the eigenvalues,
-competence estimates, and answer keys closely track UCINET on the same data.
+competence estimates, and answer keys closely track 'UCINET' on the same data.
+Because 'UCINET' and 'ANTHROPAC' implement the same classical consensus
+procedures, these comparisons also support agreement with 'ANTHROPAC' for the
+models covered by this package.
 
-If you already use UCINET, this package is meant to give you the same
+If you already use 'UCINET' or 'ANTHROPAC', this package is meant to give you the same
 classical workflow directly in R.
 
 ## Minimal Example
