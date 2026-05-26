@@ -1,5 +1,7 @@
 # Romney: Classical Cultural Consensus Analysis
 
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/Romney)](https://CRAN.R-project.org/package=Romney)
+
 `Romney` is an R package for classical cultural consensus analysis (CCA).
 It implements the three core models most researchers mean when they talk
 about "classical" consensus analysis:
