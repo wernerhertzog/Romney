@@ -1,0 +1,9 @@
+bibentry(
+  bibtype = "Manual",
+  title = "Romney: Classical Cultural Consensus Analysis",
+  author = person("Werner", "Hertzog"),
+  year = "2026",
+  note = paste("R package version", meta$Version),
+  doi = "10.32614/CRAN.package.Romney",
+  url = "https://CRAN.R-project.org/package=Romney"
+)

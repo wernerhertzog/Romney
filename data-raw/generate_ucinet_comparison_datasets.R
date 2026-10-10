@@ -31,9 +31,16 @@ write_dataset <- function(src, dest) {
   invisible(dest)
 }
 
-ucinet_dir <- Sys.getenv("ROMNEY_UCINET_DIR", unset = path.expand("~/Documents/UCINET data"))
-out_dir <- file.path("inst", "extdata")
+# This imports existing DL exports; it cannot reconstruct the original simulations.
+ucinet_dir <- Sys.getenv("ROMNEY_UCINET_DIR")
+out_dir <- Sys.getenv("ROMNEY_REFERENCE_IMPORT_DIR")
+if (!nzchar(ucinet_dir) || !nzchar(out_dir)) {
+  stop("Set ROMNEY_UCINET_DIR and ROMNEY_REFERENCE_IMPORT_DIR to import external DL files.", call. = FALSE)
+}
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+if (normalizePath(out_dir) == normalizePath(file.path("inst", "extdata"))) {
+  stop("Import into a separate directory; do not overwrite fixed UCINET reference CSVs.", call. = FALSE)
+}
 
 write_dataset(
   file.path(ucinet_dir, "synthetic_yesno_36x103.dl"),

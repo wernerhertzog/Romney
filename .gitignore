@@ -21,3 +21,4 @@
 *.knit.md
 .Renviron
 .DS_Store
+/inst/doc/

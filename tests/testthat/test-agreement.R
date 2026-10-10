@@ -40,3 +40,19 @@ test_that("covariance agreement handles binary data", {
   expect_true(all(diag(out) == 1))
   expect_equal(out, t(out))
 })
+
+test_that("covariance agreement equals independently calculated sample covariance", {
+  x <- rbind(c(0, 1, 1, 0, NA), c(0, 1, 0, 0, 1), c(1, 0, 0, 1, 0))
+  out <- agreement_covariance(x, prior = 0.3)
+  for (i in 2:3) {
+    keep <- !is.na(x[1, ]) & !is.na(x[i, ])
+    expect_equal(unname(out[1, i]), stats::cov(x[1, keep], x[i, keep]) / (0.3 * 0.7))
+  }
+})
+
+test_that("formal agreement is invariant to category labels and handles missingness", {
+  x <- rbind(c(1, 2, NA, 1), c(1, 1, 2, NA), c(2, 2, 1, 1))
+  labelled <- matrix(c("cold", "hot")[x], nrow = nrow(x))
+  expect_equal(agreement_formal(x), agreement_formal(labelled))
+  expect_equal(unname(agreement_formal(x)[1, 2]), 0)
+})

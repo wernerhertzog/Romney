@@ -65,3 +65,50 @@ test_that("ordinal synthetic data matches UCINET closely", {
     tolerance = 0.03
   )
 })
+
+test_that("complete UCINET tables are compared for each reference dataset", {
+  for (i in seq_len(nrow(ucinet_cases))) {
+    case <- ucinet_cases[i, ]
+    x <- read_extdata_csv(case$csv)
+    reference <- ucinet_reference(extdata_path("ucinet_results", case$log), nrow(x), ncol(x))
+    fit <- consensus(x, method = case$method)
+    expect_equal(fit$factor_method, "minres")
+    expect_equal(fit$diagnostics$extracted_factors, 2L)
+    expect_lt(max(abs(fit$agreement - reference$agreement)), 0.00050001)
+    expect_lt(max(abs(fit$competence[, 1] - reference$competence)), 0.01)
+    expect_lt(abs(fit$factor_ss_loadings[1] - reference$factor_ss[1]), 0.025)
+    expect_lt(abs(fit$factor_ss_loadings[2] - reference$factor_ss[2]), 0.01)
+    expect_lt(abs(fit$ratio_eigen_1_2 - reference$ratio), if (case$method == "informal") 1.5 else 0.1)
+    expect_equal(fit$negative_competence_first_factor, reference$negatives)
+    expect_identical(fit$factor_ss_loadings, fit$eigenvalues)
+    expect_length(fit$answer_key$key, ncol(x))
+    expect_true(all(fit$answer_key$status == "estimated"))
+    if (case$method == "informal") {
+      expect_lt(max(abs(fit$answer_key$key - reference$key)), 0.001)
+      expect_null(fit$answer_key$probabilities)
+    } else {
+      expect_equal(unname(fit$answer_key$key), reference$key)
+      freq <- reference$frequencies
+      observed <- mapply(function(item, response) sum(x[, item] == response, na.rm = TRUE), freq$item, freq$response)
+      weighted <- mapply(function(item, response) {
+        fit$answer_key$weighted_frequencies[as.character(response), item]
+      }, freq$item, freq$response)
+      expect_equal(unname(observed), freq$count)
+      expect_lt(max(abs(weighted - freq$weighted)), 0.1)
+      if (case$method == "formal") {
+        expect_equal(unname(colSums(fit$answer_key$probabilities)), rep(1, ncol(x)))
+      } else {
+        expect_null(fit$answer_key$probabilities)
+      }
+    }
+  }
+})
+
+test_that("all declared options reach both formal agreement and the answer key", {
+  x <- read_extdata_csv("synthetic_multiple_choice_36x103_k4.csv")
+  fit <- consensus(x, answer_levels = 1:5)
+  expect_equal(fit$n_answers, 5L)
+  expect_equal(fit$agreement, agreement_formal(x, n_answers = 5))
+  expect_equal(fit$answer_key$levels, 1:5)
+  expect_equal(nrow(fit$answer_key$probabilities), 5L)
+})

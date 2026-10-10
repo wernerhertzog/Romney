@@ -1,0 +1,234 @@
+---
+title: "Classical Cultural Consensus Analysis"
+author: "Werner Hertzog"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Classical Cultural Consensus Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(Romney)
+```
+
+## Scope And Data
+
+`Romney` implements classical consensus procedures for respondent-by-item
+data. Rows are informants and columns are judgments about a cultural domain.
+Remove identifiers and summary rows before analysis. Missing responses must
+be `NA`, not extra response categories or numeric sentinel codes.
+
+Consensus concerns the answers shared within the sampled domain and group;
+it does not establish that those answers are objectively true. A good
+numerical solution does not by itself establish independent informants,
+comparable knowledge across items, or a single shared answer pattern.
+Interpret the diagnostics alongside the study's ethnographic context.
+
+There are two broad classical approaches: a formal knowledge-and-guessing
+model for categorical responses and an informal analysis of quantitative
+respondent profiles. Binary covariance agreement is an alternative within
+the categorical approach. This package retains the names `formal`,
+`informal`, and `covariance` for its three analysis settings.
+
+## Formal Model
+
+Let $X_{ij}$ denote respondent $i$'s answer to item $j$, $T_j$ its unknown
+cultural answer, $c_i$ respondent competence, and $m$ the number of options.
+A respondent knows the answer with probability $c_i$ and otherwise guesses
+uniformly among all options. Consequently,
+
+$$
+P(X_{ij}=k\mid T_j=t,c_i)=
+\begin{cases}
+c_i+(1-c_i)/m,&k=t,\\
+(1-c_i)/m,&k\ne t.
+\end{cases}
+$$
+
+Competence is therefore not the raw proportion of correct responses. Even
+someone with $c_i=0$ gives the correct answer with probability $1/m$.
+
+For distinct respondents, if $p_{ih}$ is their proportion of matching
+responses, the chance-corrected agreement estimate is
+
+$$a_{ih}=\frac{m p_{ih}-1}{m-1}.$$
+
+Under the model, its expectation is $c_i c_h$. Each item must use the same
+set of response options. Declare unobserved options explicitly rather than
+underestimating the number of choices.
+
+```{r formal-example}
+sim <- simulate_consensus_data(24, 60, n_answers = 4,
+                               competence = 0.6, seed = 7)
+formal <- consensus(sim$responses, method = "formal", answer_levels = 1:4)
+formal
+head(formal$answer_key$key)
+```
+
+With answer prior $q_{kj}$, the conditional posterior is
+
+$$
+P(T_j=k\mid X,\widehat{c})=
+\frac{q_{kj}\prod_{i\in O_j}P(X_{ij}\mid T_j=k,\widehat{c}_i)}
+{\sum_{\ell=1}^{m}q_{\ell j}\prod_{i\in O_j}
+ P(X_{ij}\mid T_j=\ell,\widehat{c}_i)},
+$$
+
+where $O_j$ contains respondents with an observed answer. Calculation uses
+log likelihoods to avoid underflow. `answerkey_formal()` accepts custom
+priors, whereas `consensus()` uses uniform answer priors for the formal key.
+Posterior probabilities condition on estimated competence and do not include
+uncertainty from estimating it.
+
+Contradictory answers from respondents assigned competence one can make
+every candidate impossible. The function then warns and returns `NA`
+probabilities and keys, rather than falling back to the prior. Ties also
+have `NA` keys. Entirely missing items retain their prior probabilities but
+have `no_data` status and no inferred key.
+
+## Binary Covariance Model
+
+For binary responses, define pairwise counts $n_{11},n_{10},n_{01},n_{00}$
+over $n$ jointly observed items. With assumed true-item proportion $\pi$,
+the agreement coefficient is
+
+$$
+a_{ih}=\frac{n_{11}n_{00}-n_{10}n_{01}}
+{n(n-1)\pi(1-\pi)}.
+$$
+
+The numerator divided by $n(n-1)$ is the sample covariance of the two
+binary profiles. The second allowable category is treated as true; inferred
+categories are sorted. The default $\pi=0.5$ concerns the unknown answer
+key, not an individual respondent's frequency of saying yes.
+
+```{r binary-example}
+path <- system.file("extdata", "synthetic_yesno_36x103.csv", package = "Romney")
+binary_data <- as.matrix(read.csv(path, row.names = 1))
+binary <- consensus(binary_data, method = "covariance", prior = 0.5)
+binary
+head(binary$answer_key$key)
+```
+
+`answerkey_covariance()` chooses the category with the greater sum of
+respondent competences among observed responses. Its `weighted_proportions`
+are normalized voting weights, not posterior probabilities. To reproduce
+the scale of UCINET detail tables, `weighted_frequencies` multiplies these
+proportions by the total respondent count, even when an item has missing
+answers. Neither output is an estimate of respondent response-bias parameters.
+
+## Informal Model
+
+Rankings and numerical ratings can be compared with Pearson correlation,
+
+$$a_{ih}=\operatorname{cor}(X_i,X_h).$$
+
+Informal competence measures correspondence with a shared response pattern,
+not a probability of knowing an answer. Numeric ranks and ratings are
+treated as scores: arbitrary recoding of an ordinal scale can change
+Pearson correlations. Constant respondent profiles or zero variation on
+overlapping items make correlations undefined.
+
+```{r informal-example}
+path <- system.file("extdata", "synthetic_ordinal_36x103_1to5.csv", package = "Romney")
+ordinal_data <- as.matrix(read.csv(path, row.names = 1))
+informal <- consensus(ordinal_data, method = "informal")
+informal
+head(informal$answer_key$key)
+```
+
+This implementation reports original-scale weighted means,
+
+$$\widehat{T}_j=
+\frac{\sum_{i\in O_j}\widehat{c}_i X_{ij}}
+{\sum_{i\in O_j}\widehat{c}_i}.$$
+
+It retains signed weights and requires a positive total weight for each
+item. These means are not standardized regression factor scores; negative
+weights can produce estimates outside the observed response range.
+
+## Extraction And Interpretation
+
+`Romney` uses `psych::fa()` with unrotated minimum-residual extraction.
+In a factor representation, off-diagonal agreements are approximated by
+$a_{ih}\approx\sum_f L_{if}L_{hf}$. The diagonal of the input matrix is
+set to one; the fitted communalities are estimated during extraction.
+At least two factors are extracted to form the first-to-second ratio,
+even when `cultures = 1` returns only first-factor loadings.
+
+The `factor_ss_loadings` field contains sums of squared loadings, with
+`eigenvalues` retained as a historical alias. `raw_eigenvalues` contains
+eigenvalues of the original agreement matrix. These quantities need not
+match. The legacy argument `cultures` controls returned dimensions; it does
+not identify distinct cultural groups or fit a mixture of cultures.
+
+A ratio above three and a non-negative first factor are commonly used
+diagnostics, not significance tests. Inspect residuals, communalities,
+negative loadings, missingness, and extraction warnings as well.
+Probability-scale competence thresholds are not applied to the informal
+model. No bootstrap intervals or formal multi-culture selection test are
+implemented in this version.
+
+```{r diagnostics}
+formal$criteria
+formal$diagnostics$extracted_factors
+formal$diagnostics$positive_semidefinite
+range(formal$diagnostics$pairwise_items)
+```
+
+Signed loadings are never silently clipped in reported competence. If a
+formal or covariance first-factor loading is outside $[0,1]$, the default
+`competence_policy = "strict"` skips answer-key estimation with a warning.
+Explicit `"truncate"` clips only the weights used for a sensitivity
+calculation and does not remedy a violation of the model.
+
+Missing responses are omitted pairwise, not imputed. Pairwise deletion can
+produce a non-positive-semidefinite matrix. The factor library may issue
+smoothing or other warnings, which remain visible and are retained in
+`diagnostics$factor_warnings`. Extraction errors stop the analysis; they do
+not trigger another estimator. At least three respondents are required,
+but this is an identification minimum, not a recommended study size.
+
+## Validation And Citation
+
+The three bundled synthetic datasets are fixed software-comparison
+fixtures, not empirical anthropological findings. Complete available
+UCINET 6.832 tables are compared for all respondents and items.
+Agreement matches at the printed precision, categorical keys match
+exactly, and ordinal weighted means differ by less than 0.001.
+Factor statistics and competence estimates are close but not identical.
+The relatively larger ordinal ratio discrepancy is reported explicitly.
+
+The installed validation directory contains full CSV comparisons and
+environment metadata:
+
+```{r validation-location}
+system.file("validation", "ucinet-summary.csv", package = "Romney")
+```
+
+There are no bundled UCINET posterior-probability tables, second-factor
+loading tables, or independent ANTHROPAC runs. Those are limits on the
+cross-software validation claims. Mathematical and simulation tests
+provide separate checks of the implementation. The original reference
+inputs are preserved because their simulation seeds are not recorded.
+
+Use `citation("Romney")` to cite the software. Cite the methodological
+references appropriate to the analysis as well.
+
+## References
+
+Romney, A. K., Weller, S. C., and Batchelder, W. H. (1986). Culture as
+consensus: A theory of culture and informant accuracy. *American
+Anthropologist*, 88(2), 313--338.
+[doi:10.1525/aa.1986.88.2.02a00020](https://doi.org/10.1525/aa.1986.88.2.02a00020).
+
+Romney, A. K., Batchelder, W. H., and Weller, S. C. (1987). Recent
+Applications of Cultural Consensus Theory. *American Behavioral
+Scientist*, 31(2), 163--177.
+[doi:10.1177/000276487031002003](https://doi.org/10.1177/000276487031002003).
+
+Weller, S. C. (2007). Cultural consensus theory: Applications and frequently
+asked questions. *Field Methods*, 19(4), 339--368.
+[doi:10.1177/1525822X07303502](https://doi.org/10.1177/1525822X07303502).

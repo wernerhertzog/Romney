@@ -5,3 +5,4 @@
 ^\.gitignore$
 ^.*\.Rproj$
 ^\.DS_Store$
+^\.github$
