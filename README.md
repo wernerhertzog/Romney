@@ -31,8 +31,6 @@ To install the development version from GitHub:
 pak::pak("wernerhertzog/Romney")
 ```
 
-Version 0.1.1 is under development and has not yet been released on CRAN.
-
 ## What Classical CCA Does
 
 In the classical approach introduced by Romney, Weller, and Batchelder,
